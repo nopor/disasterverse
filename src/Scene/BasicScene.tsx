@@ -1,15 +1,15 @@
 import { FC, useEffect, useRef } from "react";
 import { Engine, EngineOptions, Scene, SceneOptions } from "@babylonjs/core";
 type BasicSceneProps = {
-  antialias: boolean,
+  antialias?: boolean,
   engineOptions?: EngineOptions,
-  adaptToDeviceRatio: boolean,
+  adaptToDeviceRatio?: boolean,
   sceneOptions?: SceneOptions,
   onRender?: (scene: Scene) => void,
   onSceneReady?: (scene: Scene) => void
 }
 export const BasicScene: FC<BasicSceneProps> =
-  ({ antialias, engineOptions, adaptToDeviceRatio, sceneOptions, onRender, onSceneReady, ...rest }) => {
+  ({ antialias = true, engineOptions, adaptToDeviceRatio = true, sceneOptions, onRender, onSceneReady, ...rest }) => {
     const reactCanvas = useRef(null);
 
     // set up basic engine and scene
