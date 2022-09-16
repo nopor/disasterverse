@@ -1,11 +1,13 @@
 import React from "react";
-import { FreeCamera, Vector3, HemisphericLight, MeshBuilder, Scene, SceneLoader } from "@babylonjs/core";
+import { FreeCamera, Vector3, HemisphericLight, MeshBuilder, Scene, SceneLoader, AbstractMesh } from "@babylonjs/core";
 import "./App.css";
 import { BasicScene } from "./Scene/BasicScene";
 import { Mesh } from "@babylonjs/core/Meshes/mesh";
 import {} from "@babylonjs/loaders";
 
 let box: Mesh;
+
+let importedBox: AbstractMesh;
 
 const onSceneReady = (scene: Scene) => {
   // This creates and positions a free camera (non-mesh)
@@ -32,9 +34,14 @@ const onSceneReady = (scene: Scene) => {
   box.position.y = 1;
 
   // Our built-in 'ground' shape.
-  MeshBuilder.CreateGround("ground", { width: 6, height: 6 }, scene);
+  // MeshBuilder.CreateGround("ground", { width: 6, height: 6 }, scene);
 
-  SceneLoader.ImportMesh("", `${process.env.PUBLIC_URL}/assets/test_cube.glb`, "", scene, () => {
+  SceneLoader.ImportMesh("", `${process.env.PUBLIC_URL}/assets/test_cube.glb`, "", scene, (meshes: AbstractMesh[]) => {
+    importedBox = meshes[0];
+    importedBox.position.x = 3;
+    importedBox.position.y = 1;
+  });
+  SceneLoader.ImportMesh("", `${process.env.PUBLIC_URL}/assets/water.glb`, "", scene, () => {
     console.log('done');
   });
 };
@@ -43,11 +50,13 @@ const onSceneReady = (scene: Scene) => {
  * Will run on every frame render.  We are spinning the box on y-axis.
  */
 const onRender = (scene: Scene) => {
-  if (box !== undefined) {
+  if (box && importedBox) {
     var deltaTimeInMillis = scene.getEngine().getDeltaTime();
 
     const rpm = 10;
-    box.rotation.y += (rpm / 60) * Math.PI * 2 * (deltaTimeInMillis / 1000);
+    box.rotation.z += (rpm / 60) * Math.PI * 2 * (deltaTimeInMillis / 1000);
+    // importedBox.rotation.z -= (rpm / 60) * Math.PI * 2 * (deltaTimeInMillis / 1000);
+    importedBox.rotate(Vector3.Up(), (rpm / 60) * Math.PI * 2 * (deltaTimeInMillis / 1000));
   }
 };
 

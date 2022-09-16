@@ -30,3 +30,5 @@ const BuildTerrain = (scene: Scene) => {
   
   terrain.LODLimits = [4, 3, 2, 1, 1];
 }
+
+export { BuildTerrain };
