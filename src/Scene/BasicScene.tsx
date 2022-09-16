@@ -2,11 +2,11 @@ import { FC, useEffect, useRef } from "react";
 import { Engine, EngineOptions, Scene, SceneOptions } from "@babylonjs/core";
 type BasicSceneProps = {
   antialias: boolean,
-  engineOptions: EngineOptions,
+  engineOptions?: EngineOptions,
   adaptToDeviceRatio: boolean,
-  sceneOptions: SceneOptions,
-  onRender: (scene: Scene) => void,
-  onSceneReady: (scene: Scene) => void
+  sceneOptions?: SceneOptions,
+  onRender?: (scene: Scene) => void,
+  onSceneReady?: (scene: Scene) => void
 }
 export const BasicScene: FC<BasicSceneProps> =
   ({ antialias, engineOptions, adaptToDeviceRatio, sceneOptions, onRender, onSceneReady, ...rest }) => {
@@ -20,10 +20,12 @@ export const BasicScene: FC<BasicSceneProps> =
 
       const engine = new Engine(canvas, antialias, engineOptions, adaptToDeviceRatio);
       const scene = new Scene(engine, sceneOptions);
-      if (scene.isReady()) {
-        onSceneReady(scene);
-      } else {
-        scene.onReadyObservable.addOnce((scene) => onSceneReady(scene));
+      if (typeof onSceneReady === "function") {
+        if (scene.isReady()) {
+          onSceneReady(scene);
+        } else {
+          scene.onReadyObservable.addOnce((scene) => onSceneReady(scene));
+        }
       }
 
       engine.runRenderLoop(() => {
