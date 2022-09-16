@@ -9,7 +9,7 @@ type BasicSceneProps = {
   onSceneReady?: (scene: Scene) => void
 }
 export const BasicScene: FC<BasicSceneProps> =
-  ({ antialias = true, engineOptions, adaptToDeviceRatio = true, sceneOptions, onRender, onSceneReady, ...rest }) => {
+  ({ antialias = true, engineOptions, adaptToDeviceRatio = false, sceneOptions, onRender, onSceneReady, ...rest }) => {
     const reactCanvas = useRef(null);
 
     // set up basic engine and scene
