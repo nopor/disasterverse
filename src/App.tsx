@@ -1,8 +1,9 @@
 import React from "react";
-import { FreeCamera, Vector3, HemisphericLight, MeshBuilder, Scene } from "@babylonjs/core";
+import { FreeCamera, Vector3, HemisphericLight, MeshBuilder, Scene, SceneLoader } from "@babylonjs/core";
 import "./App.css";
 import { BasicScene } from "./Scene/BasicScene";
 import { Mesh } from "@babylonjs/core/Meshes/mesh";
+import {} from "@babylonjs/loaders";
 
 let box: Mesh;
 
@@ -32,6 +33,10 @@ const onSceneReady = (scene: Scene) => {
 
   // Our built-in 'ground' shape.
   MeshBuilder.CreateGround("ground", { width: 6, height: 6 }, scene);
+
+  SceneLoader.ImportMesh("", `${process.env.PUBLIC_URL}/assets/test_cube.glb`, "", scene, () => {
+    console.log('done');
+  });
 };
 
 /**
