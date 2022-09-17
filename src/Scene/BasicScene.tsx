@@ -26,14 +26,18 @@ export const BasicScene: FC<BasicSceneProps> =
 
         const engine = new Engine(canvas, antialias, engineOptions, adaptToDeviceRatio);
         const scene = new Scene(engine, sceneOptions);
-        // @ts-ignore
-
-        const camera = new UniversalCamera("UniversalCamera", new Vector3(120, 20, 100), scene);
+        // const outsideVorwerk = new Vector3(120, 20, 100);
+        const hackZurichStart = new Vector3(
+          42.58272892940811,
+          31.93251265525484,
+          -133.5501336362101);
+        const cameraStartPoint = hackZurichStart
+        const camera = new UniversalCamera("UniversalCamera", cameraStartPoint, scene);
         // const camera = new VRDeviceOrientationFreeCamera("UniversalCamera", new Vector3(120, 20, 100), scene);
         camera.setTarget(Vector3.Zero());
-        camera.applyGravity = true;
-        camera.ellipsoid = new Vector3(1, 1.5, 1);
-        camera.checkCollisions = true;
+        // camera.applyGravity = true;
+        // camera.ellipsoid = new Vector3(1, 1.5, 1);
+        // camera.checkCollisions = true;
         camera.attachControl(canvas, true);
         camera.speed = 0.5;
         camera.keysUp.push(87);
@@ -78,9 +82,6 @@ export const BasicScene: FC<BasicSceneProps> =
 
         const light = new HemisphericLight("light", new Vector3(0, 30, 0), scene);
         light.intensity = 1;
-
-
-
 
         if (typeof onSceneReady === "function") {
           scene.enablePhysics();

@@ -6,19 +6,20 @@ import {
   Vector2,
   Texture,
   Color3,
-  StandardMaterial,
   Material,
   SceneLoader,
   PhysicsImpostor,
   Tools,
   AbstractMesh,
   CubeTexture,
+  KeyboardInfo,
 } from "@babylonjs/core";
 import { BasicScene } from "../Scene/BasicScene";
 import { WaterMaterial } from "@babylonjs/materials";
 import { MAX_WATER_LEVEL, WATER_RISING_SPEED } from "../util/values";
 
 let nextUpdate = 0;
+let waterRising = false;
 const skyBoxTex = `${process.env.PUBLIC_URL}/textures/environment.env`;
 export const VrScene: FC<{
   setWaterLevel: (level: number) => void
@@ -33,6 +34,16 @@ export const VrScene: FC<{
     const texture = new CubeTexture(skyBoxTex, scene);
     const skybox = scene.createDefaultSkybox(texture, false, 1000);
 
+    scene.onKeyboardObservable.add((ev: KeyboardInfo) => {
+        if (ev.event.key === 'r') {
+          console.log('water rising')
+          waterRising = true;
+        }
+        if (ev.event.key === 't') {
+          console.log('water stopped')
+          waterRising = false;
+        }
+    });
 
     const defaultPlane = MeshBuilder.CreateGround('ground', { height: 750, width: 750 }, scene);
     defaultPlane.checkCollisions = true;
@@ -89,11 +100,9 @@ export const VrScene: FC<{
    */
   const onRender = (scene: Scene) => {
     if (flood) {
-      var deltaTimeInMillis = scene.getEngine().getDeltaTime();
-
-      const rpm = WATER_RISING_SPEED;
-      if (buildingLoaded && flood.position.y < MAX_WATER_LEVEL) {
-        flood.position.y += (rpm / 60) * (deltaTimeInMillis / 1000);
+      if (buildingLoaded && waterRising && flood.position.y < MAX_WATER_LEVEL) {
+        const deltaTimeInMillis = scene.getEngine().getDeltaTime();
+        flood.position.y += WATER_RISING_SPEED * (deltaTimeInMillis / 1000);
         nextUpdate -= deltaTimeInMillis;
         if(nextUpdate <= 0) {
           nextUpdate = 2000;

@@ -19,6 +19,31 @@ code {
 }
 
 
+/* Lava level */
+.lava {
+  overflow:hidden;
+  position:relative;
+  width:100px;
+  height:100px;
+  background-color:rgba(243, 52, 23, 0.8);
+  border-radius:50%;
+  box-shadow: inset 0 0 50px #d17001;
+  transform: translateZ(0);
+}
+.lava::before{
+  content:"";
+  position:absolute;
+  top: var(--lavalevel);
+  left:-50%;
+  width:200%;
+  height:200%;
+  border-radius:40%;
+  background-color:rgba(19, 19, 19, 0.8);
+  opacity:.8;
+  animation: thing 12s linear infinite;
+  transition: top 0.2s ease;
+}
+
 /* Water level */
 
 .liquid {
