@@ -55,7 +55,7 @@ export const VrFlood: FC = () => {
         for (let importedMesh of meshes) {
           importedMesh.physicsImpostor = new PhysicsImpostor(meshes[0], PhysicsImpostor.BoxImpostor, { mass: 0, friction: 0.1, restitution: 0.8 }, scene);
           importedMesh.checkCollisions = true;
-          importedMesh.rotation.x = Tools.ToRadians(3);
+          importedMesh.rotation.x = Tools.ToRadians(0.5);
           // importedBuilding.position.y = -6;
           importedBuildings.push(importedMesh);
         }
@@ -77,6 +77,7 @@ export const VrFlood: FC = () => {
     const defaultPlane = MeshBuilder.CreateGround('ground', { height: 300, width: 300 }, scene);
     defaultPlane.checkCollisions = true;
     defaultPlane.position.y = 5;
+    defaultPlane.rotation.x = Tools.ToRadians(0.5);
 
     const waterMat = new WaterMaterial("water", scene);
     waterMat.bumpTexture = new Texture(`${process.env.PUBLIC_URL}/textures/waterbump.png`, scene);
