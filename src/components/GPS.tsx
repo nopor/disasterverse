@@ -6,8 +6,8 @@ export const GPS = () => {
 
   function setPosition(position: any) {
     console.log("position", position);
-    setLat(position.coords.latitude);
-    setLon(position.coords.longitude);
+    setLat(+Number(position.coords.latitude).toFixed(4));
+    setLon(+Number(position.coords.longitude).toFixed(4));
   }
 
   useEffect(() => {

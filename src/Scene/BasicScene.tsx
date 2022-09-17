@@ -59,6 +59,7 @@ export const BasicScene: FC<BasicSceneProps> =
         };
         const xr = await scene.createDefaultXRExperienceAsync();
         xr.input.onControllerAddedObservable.add(() => {
+          xr.teleportation.teleportationEnabled = true;
           const vrCamera = new DeviceOrientationCamera("DevOr_camera", new Vector3(120, 20, 100), scene);
           vrCamera.setTarget(Vector3.Zero());
           vrCamera.attachControl(canvas, true);
