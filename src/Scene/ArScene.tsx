@@ -33,10 +33,8 @@ export const ARScene: FC<ARSceneProps> = ({
   sceneOptions,
   onRender,
   onSceneReady,
-  ...rest
 }) => {
   const reactCanvas = useRef(null);
-  const waterLevelRef = useRef<WaterLevelRef>(null);
 
   const [secondsLeft, setSecondsLeft] = useState(2220);
 
