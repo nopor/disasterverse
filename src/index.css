@@ -30,7 +30,7 @@ code {
 .liquid::before{
   content:"";
   position:absolute;
-  top:-150%;
+  top: var(--waterlevel);
   left:-50%;
   width:200%;
   height:200%;

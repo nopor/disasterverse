@@ -1,6 +1,17 @@
-import { FC } from "react";
+import { forwardRef, useImperativeHandle, useState } from "react";
+export type WaterLevelRef = {
+  setWaterLevel: (value: number) => void;
+}
+export const WaterLevel = forwardRef<WaterLevelRef>((props, ref) => {
+  const [waterLevel, setInternalWaterLevel] = useState(0);
+  useImperativeHandle(ref, () => ({
+    setWaterLevel(value) {
+      setInternalWaterLevel(value);
+    }
+  }));
 
-export const WaterLevel: FC<{ percentage: number }> = ({ percentage }) => {
+  const waterStyle = { "--waterlevel": (waterLevel * -2).toFixed(2) + '%' } as React.CSSProperties;
+
   return (
     <div
       style={{
@@ -10,7 +21,7 @@ export const WaterLevel: FC<{ percentage: number }> = ({ percentage }) => {
         overflow: "hidden",
       }}
     >
-      <div className="liquid"></div>
+      <div className="liquid" style={waterStyle}></div>
 
       <p
         className="text-glow"
@@ -22,6 +33,6 @@ export const WaterLevel: FC<{ percentage: number }> = ({ percentage }) => {
       >
         Water level 7m
       </p>
-    </div>
+    </div >
   );
-};
+});

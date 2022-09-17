@@ -212,7 +212,7 @@ export const ARScene: FC<ARSceneProps> = ({
           alignItems: "center",
         }}
       >
-        <WaterLevel percentage={55} />
+        <WaterLevel />
       </div>
       <div
         id="hud-bottom-center"
