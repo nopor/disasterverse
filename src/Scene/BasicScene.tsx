@@ -1,5 +1,5 @@
 import { FC, useEffect, useRef } from "react";
-import { Color3, Engine, EngineOptions, HemisphericLight, MeshBuilder, OimoJSPlugin, Scene, SceneOptions, StandardMaterial, Texture, UniversalCamera, Vector3 } from "@babylonjs/core";
+import { Color3, Engine, EngineOptions, HemisphericLight, MeshBuilder, Scene, SceneOptions, StandardMaterial, Texture, UniversalCamera, Vector3 } from "@babylonjs/core";
 
 // @ts-ignore
 // import * as Ammo from 'ammo.js';
@@ -35,7 +35,7 @@ export const BasicScene: FC<BasicSceneProps> =
       scene.collisionsEnabled = true;
 
       const light = new HemisphericLight("light", new Vector3(0, 30, 0), scene);
-      light.intensity = 0.7;
+      light.intensity = 1;
 
 
       const skybox = MeshBuilder.CreateSphere("sky", { diameter: 600 }, scene);
