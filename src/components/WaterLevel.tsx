@@ -31,7 +31,7 @@ export const WaterLevel = forwardRef<WaterLevelRef>((props, ref) => {
           overflow: "hidden",
         }}
       >
-        Water level 7m
+        Water level
       </p>
     </div >
   );

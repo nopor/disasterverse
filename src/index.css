@@ -42,7 +42,7 @@ code {
   background-color:rgba(255, 255, 255, 0.8);
   opacity:.8;
   animation: thing 12s linear infinite;
- 
+  transition: top 0.2s ease;
 }
 @keyframes thing{
   0%{

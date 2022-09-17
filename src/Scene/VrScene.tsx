@@ -8,6 +8,10 @@ import {
   Color3,
   StandardMaterial,
   Material,
+  SceneLoader,
+  PhysicsImpostor,
+  Tools,
+  AbstractMesh,
 } from "@babylonjs/core";
 import { BasicScene } from "../Scene/BasicScene";
 import { WaterMaterial } from "@babylonjs/materials";
@@ -18,35 +22,13 @@ let nextUpdate = 0;
 export const VrScene: FC<{
   setWaterLevel: (level: number) => void
 }> = ({ setWaterLevel }) => {
-  // let box: Mesh;
 
-  // let importedBuildings: AbstractMesh[] = [];
+  let importedBuildings: AbstractMesh[] = [];
 
   let flood: Mesh;
-  // let buildingLoaded = false;
+  let buildingLoaded = false;
 
   const onSceneReady = (scene: Scene) => {
-    // const canvas = scene.getEngine().getRenderingCanvas();
-    // Our built-in 'box' shape.
-    // box = MeshBuilder.CreateBox("box", { size: 2 }, scene);
-
-    // Move the box upward 1/2 its height
-    // box.position.y = 1;
-
-    // Our built-in 'ground' shape.
-    // MeshBuilder.CreateGround("ground", { width: 6, height: 6 }, scene);
-
-    // SceneLoader.ImportMesh(
-    //   "",
-    //   `${process.env.PUBLIC_URL}/assets/test_cube.glb`,
-    //   "",
-    //   scene,
-    //   (meshes: AbstractMesh[]) => {
-    //     importedBox = meshes[0];
-    //     importedBox.position.x = 3;
-    //     importedBox.position.y = 1;
-    //   }
-    // );
     const skybox = MeshBuilder.CreateSphere("sky", { diameter: 600 }, scene);
     const skyboxMaterial = new StandardMaterial("sky", scene);
     skyboxMaterial.backFaceCulling = false;
@@ -60,7 +42,7 @@ export const VrScene: FC<{
 
     const defaultPlane = MeshBuilder.CreateGround('ground', { height: 750, width: 750 }, scene);
     defaultPlane.checkCollisions = true;
-    defaultPlane.position.y = 4;
+    defaultPlane.position.y = 5;
     const invisilbeMat = new Material('inv', scene);
     invisilbeMat.alpha = 1;
     defaultPlane.material = invisilbeMat;
@@ -81,23 +63,23 @@ export const VrScene: FC<{
     waterMat.waveLength = 0.1;
     waterMat.addToRenderList(skybox);
 
-    // SceneLoader.ImportMesh(
-    //   "",
-    //   `${process.env.PUBLIC_URL}/assets/vorwerk_low.glb`,
-    //   "",
-    //   scene,
-    //   (meshes) => {
-    //     for (let importedMesh of meshes) {
-    //       importedMesh.physicsImpostor = new PhysicsImpostor(meshes[0], PhysicsImpostor.BoxImpostor, { mass: 0, friction: 0.1, restitution: 0.8 }, scene);
-    //       importedMesh.checkCollisions = true;
-    //       importedMesh.rotation.x = Tools.ToRadians(0.5);
-    //       importedMesh.position.y = 1;
-    //       importedBuildings.push(importedMesh);
-    //       waterMat.addToRenderList(importedMesh);
-    //     }
-    //     buildingLoaded = true;
-    //   }
-    // );
+    SceneLoader.ImportMesh(
+      "",
+      `${process.env.PUBLIC_URL}/assets/vorwerk_low.glb`,
+      "",
+      scene,
+      (meshes) => {
+        for (let importedMesh of meshes) {
+          importedMesh.physicsImpostor = new PhysicsImpostor(meshes[0], PhysicsImpostor.BoxImpostor, { mass: 0, friction: 0.1, restitution: 0.8 }, scene);
+          importedMesh.checkCollisions = true;
+          importedMesh.rotation.x = Tools.ToRadians(0.5);
+          importedMesh.position.y = 1;
+          importedBuildings.push(importedMesh);
+          waterMat.addToRenderList(importedMesh);
+        }
+        buildingLoaded = true;
+      }
+    );
 
     flood = MeshBuilder.CreateGround('flood', { width: 600, height: 600, }, scene);
     // flood.position = new Vector3(0,10,0);
@@ -117,8 +99,7 @@ export const VrScene: FC<{
       var deltaTimeInMillis = scene.getEngine().getDeltaTime();
 
       const rpm = WATER_RISING_SPEED;
-      // if (buildingLoaded && flood.position.y < MAX_WATER_LEVEL) {
-      if (flood.position.y < MAX_WATER_LEVEL) {
+      if (buildingLoaded && flood.position.y < MAX_WATER_LEVEL) {
         flood.position.y += (rpm / 60) * (deltaTimeInMillis / 1000);
         nextUpdate -= deltaTimeInMillis;
         if(nextUpdate <= 0) {
@@ -126,12 +107,6 @@ export const VrScene: FC<{
           setWaterLevel(Math.min(flood.position.y / MAX_WATER_LEVEL * 100, 100));
         }
       }
-      // box.rotation.z += (rpm / 60) * Math.PI * 2 * (deltaTimeInMillis / 1000);
-      // // importedBox.rotation.z -= (rpm / 60) * Math.PI * 2 * (deltaTimeInMillis / 1000);
-      // importedBox.rotate(
-      //   Vector3.Up(),
-      //   (rpm / 60) * Math.PI * 2 * (deltaTimeInMillis / 1000)
-      // );
     }
   };
   return (
