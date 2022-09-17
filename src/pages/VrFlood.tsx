@@ -10,6 +10,7 @@ import {
   Texture,
   Color3,
   StandardMaterial,
+  Tools,
 } from "@babylonjs/core";
 import { BasicScene } from "../Scene/BasicScene";
 import { WaterMaterial } from "@babylonjs/materials";
@@ -18,7 +19,7 @@ export const VrFlood: FC = () => {
 
   // let box: Mesh;
 
-  let importedBuilding: AbstractMesh;
+  let importedBuildings: AbstractMesh[] = [];
 
   let flood: Mesh;
   let buildingLoaded = false;
@@ -51,10 +52,13 @@ export const VrFlood: FC = () => {
       "",
       scene,
       (meshes) => {
-        importedBuilding = meshes[0];
-        importedBuilding.physicsImpostor = new PhysicsImpostor(meshes[0], PhysicsImpostor.BoxImpostor, { mass: 0, friction: 0.1, restitution: 0.8 }, scene);
-        importedBuilding.checkCollisions = true;
-        // importedBuilding.position.y = -6;
+        for (let importedMesh of meshes) {
+          importedMesh.physicsImpostor = new PhysicsImpostor(meshes[0], PhysicsImpostor.BoxImpostor, { mass: 0, friction: 0.1, restitution: 0.8 }, scene);
+          importedMesh.checkCollisions = true;
+          importedMesh.rotation.x = Tools.ToRadians(0.5);
+          // importedBuilding.position.y = -6;
+          importedBuildings.push(importedMesh);
+        }
         buildingLoaded = true;
       }
     );
@@ -70,23 +74,28 @@ export const VrFlood: FC = () => {
     skybox.material = skyboxMaterial;
     skybox.checkCollisions = true;
 
-    const defaultPlane = MeshBuilder.CreateGround('ground', { height: 300, width: 300 }, scene);
-    defaultPlane.checkCollisions = true;
-    defaultPlane.position.y = 5;
+    // const defaultPlane = MeshBuilder.CreateGround('ground', { height: 300, width: 300 }, scene);
+    // defaultPlane.checkCollisions = true;
+    // defaultPlane.position.y = 5;
+    // defaultPlane.rotation.x = Tools.ToRadians(0.5);
 
     const waterMat = new WaterMaterial("water", scene);
     waterMat.bumpTexture = new Texture(`${process.env.PUBLIC_URL}/textures/waterbump.png`, scene);
     waterMat.windForce = -15;
-    waterMat.waveHeight = .3;
-    waterMat.waveSpeed = 2;
+    waterMat.waveHeight = .7;
+    waterMat.waveSpeed = 1.2;
     waterMat.windDirection = new Vector2(1, 1);
-    waterMat.waterColor = new Color3(0.1, 0.1, 0.6);
-    waterMat.colorBlendFactor = 0.3;
+    waterMat.fogEnabled = true;
+    waterMat.waterColor = new Color3(0.1, 0.3, 0.4); // flood-water color
+    // waterMat.waterColor = new Color3(0.8, 0.1, 0.1); // red-ish
+    // waterMat.waterColor = new Color3(0.1, 0.9, 0.1); // radioactive
+    waterMat.colorBlendFactor = 0.7;
     waterMat.bumpHeight = 0.1;
     waterMat.waveLength = 0.1;
     waterMat.addToRenderList(skybox);
-    waterMat.addToRenderList(defaultPlane);
-    waterMat.addToRenderList(importedBuilding);
+    for(let importedBuilding of importedBuildings) {
+      waterMat.addToRenderList(importedBuilding);
+    }
 
 
     flood = MeshBuilder.CreateGround('flood', { width: 600, height: 600, }, scene);
