@@ -9,11 +9,11 @@ import {
   WebXRCamera,
   WebXRSessionManager,
 } from "@babylonjs/core";
-import { WaterLevel, WaterLevelRef } from "../components/WaterLevel";
 import { Counter } from "../components/Counter";
 import { EscapeArrow } from "../components/EscapeArrow";
 import { Meter } from "../components/Meter";
 import { GPS } from "../components/GPS";
+import { WaterLevelFixed } from "../components/WaterLevelFixed";
 
 const instructions = ["Almost there!", "Hurry up!", "Follow the arrow to exit"];
 
@@ -136,15 +136,15 @@ export const ARScene: FC<ARSceneProps> = ({
         loop
         muted
         style={{
-          width: "100vw",
-          height: "100vh",
-          objectFit: "cover",
           position: "fixed",
-          left: "0",
-          right: "0",
-          top: "0",
-          bottom: "0",
-          zIndex: "-1",
+          right: 0,
+          bottom: 0,
+          top: 0,
+          left: 0,
+          minWidth: "100%",
+          minHeight: "100%",
+
+          backgroundColor: "transparent",
         }}
       >
         <source
@@ -152,7 +152,7 @@ export const ARScene: FC<ARSceneProps> = ({
           type="video/mp4"
         />
       </video>
-      <canvas ref={reactCanvas} {...rest} />;
+      {/*<canvas ref={reactCanvas} {...rest} />;*/}
       <div
         id="hud-top"
         style={{
@@ -178,7 +178,9 @@ export const ARScene: FC<ARSceneProps> = ({
           style={{
             color: "rgb(124, 251, 255)",
             fontSize: "1em",
-            paddingLeft: "10px",
+            margin: "auto",
+            width: "100vw",
+            marginTop: "50px",
             textAlign: "center",
           }}
         >
@@ -252,7 +254,7 @@ export const ARScene: FC<ARSceneProps> = ({
           alignItems: "center",
         }}
       >
-        <WaterLevel ref={waterLevelRef} />
+        <WaterLevelFixed />
       </div>
       <div
         id="hud-bottom-center"
