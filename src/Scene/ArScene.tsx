@@ -1,11 +1,18 @@
 import { FC, useEffect, useRef, useState } from "react";
-import { Engine, EngineOptions, Scene, SceneOptions } from "@babylonjs/core";
+import {
+  Engine,
+  EngineOptions,
+  Scene,
+  SceneOptions,
+  UniversalCamera,
+  Vector3,
+} from "@babylonjs/core";
 import { WaterLevel } from "../components/WaterLevel";
 import { Counter } from "../components/Counter";
 import { EscapeArrow } from "../components/EscapeArrow";
 import { Meter } from "../components/Meter";
 
-const instructions = ["Go down!", "Hurry up!", "Follow the arrow to exit"];
+const instructions = ["Almost there!", "Hurry up!", "Follow the arrow to exit"];
 
 type ARSceneProps = {
   antialias?: boolean;
@@ -52,6 +59,21 @@ export const ARScene: FC<ARSceneProps> = ({
       adaptToDeviceRatio
     );
     const scene = new Scene(engine, sceneOptions);
+    const camera = new UniversalCamera(
+      "UniversalCamera",
+      new Vector3(0, 1, 0),
+      scene
+    );
+    camera.setTarget(Vector3.Zero());
+    // camera.applyGravity = true;
+    camera.ellipsoid = new Vector3(1, 1.5, 1);
+    camera.checkCollisions = true;
+    camera.attachControl(canvas, true);
+    camera.speed = 0.5;
+    camera.keysUp.push(87);
+    camera.keysDown.push(83);
+    camera.keysRight.push(68);
+    camera.keysLeft.push(65);
     if (typeof onSceneReady === "function") {
       if (scene.isReady()) {
         onSceneReady(scene);
@@ -134,7 +156,11 @@ export const ARScene: FC<ARSceneProps> = ({
       >
         <p
           className="text-glow"
-          style={{ color: "white", fontSize: "1.2em", paddingLeft: "10px" }}
+          style={{
+            fontSize: "1em",
+            paddingLeft: "10px",
+            color: "gray",
+          }}
         >
           👤 12 Users online
         </p>
@@ -150,18 +176,41 @@ export const ARScene: FC<ARSceneProps> = ({
         }}
       >
         <p>
-          <span style={{ fontSize: "1.2em" }}>🌡️</span>
+          <span style={{ fontSize: "1.2em" }}>⛰️</span>
           <span
             className="text-glow"
             style={{
               color: "white",
               fontSize: "1.5em",
-
               paddingLeft: "5px",
             }}
           >
             {" "}
-            21 &#8451;
+            94 m
+          </span>
+        </p>
+      </div>
+      <div
+        id="hud-right"
+        style={{
+          position: "absolute",
+          top: "40px",
+          right: "10px",
+          display: "inline-flex",
+          alignItems: "center",
+        }}
+      >
+        <p>
+          <span style={{ fontSize: "1.2em" }}></span>
+          <span
+            className="text-glow"
+            style={{
+              color: "white",
+              fontSize: "0.8em",
+              paddingLeft: "5px",
+            }}
+          >
+            📍 lat: 47.37691, lon: 8.54173
           </span>
         </p>
       </div>

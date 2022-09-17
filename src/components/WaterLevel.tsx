@@ -20,7 +20,7 @@ export const WaterLevel: FC<{ percentage: number }> = ({ percentage }) => {
           overflow: "hidden",
         }}
       >
-        Water level
+        Water level 7m
       </p>
     </div>
   );
