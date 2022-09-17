@@ -12,13 +12,14 @@ import {
   PhysicsImpostor,
   Tools,
   AbstractMesh,
+  CubeTexture,
 } from "@babylonjs/core";
 import { BasicScene } from "../Scene/BasicScene";
 import { WaterMaterial } from "@babylonjs/materials";
 import { MAX_WATER_LEVEL, WATER_RISING_SPEED } from "../util/values";
 
 let nextUpdate = 0;
-
+const skyBoxTex = `${process.env.PUBLIC_URL}/textures/environment.env`;
 export const VrScene: FC<{
   setWaterLevel: (level: number) => void
 }> = ({ setWaterLevel }) => {
@@ -29,16 +30,9 @@ export const VrScene: FC<{
   let buildingLoaded = false;
 
   const onSceneReady = (scene: Scene) => {
-    const skybox = MeshBuilder.CreateSphere("sky", { diameter: 600 }, scene);
-    const skyboxMaterial = new StandardMaterial("sky", scene);
-    skyboxMaterial.backFaceCulling = false;
-    skyboxMaterial.diffuseTexture = new Texture(`${process.env.PUBLIC_URL}/textures/skycube.jpg`, scene);
-    skyboxMaterial.specularTexture = new Texture(`${process.env.PUBLIC_URL}/textures/skycube.jpg`, scene);
-    skyboxMaterial.emissiveTexture = new Texture(`${process.env.PUBLIC_URL}/textures/skycube.jpg`, scene);
-    skyboxMaterial.ambientTexture = new Texture(`${process.env.PUBLIC_URL}/textures/skycube.jpg`, scene);
-    skyboxMaterial.emissiveColor = new Color3(255, 255, 255);
-    skybox.material = skyboxMaterial;
-    skybox.checkCollisions = true;
+    const texture = new CubeTexture(skyBoxTex, scene);
+    const skybox = scene.createDefaultSkybox(texture, false, 1000);
+
 
     const defaultPlane = MeshBuilder.CreateGround('ground', { height: 750, width: 750 }, scene);
     defaultPlane.checkCollisions = true;
@@ -46,7 +40,6 @@ export const VrScene: FC<{
     const invisilbeMat = new Material('inv', scene);
     invisilbeMat.alpha = 1;
     defaultPlane.material = invisilbeMat;
-    // defaultPlane.rotation.x = Tools.ToRadians(0.5);
 
     const waterMat = new WaterMaterial("water", scene);
     waterMat.bumpTexture = new Texture(`${process.env.PUBLIC_URL}/textures/waterbump.png`, scene);
