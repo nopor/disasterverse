@@ -10,7 +10,7 @@ export const WaterLevel = forwardRef<WaterLevelRef>((props, ref) => {
     }
   }));
 
-  const waterStyle = { "--waterlevel": (waterLevel * -2).toFixed(2) + '%' } as React.CSSProperties;
+  const waterStyle = { "--waterlevel": ((waterLevel + 100) * -1).toFixed(2) + '%' } as React.CSSProperties;
 
   return (
     <div

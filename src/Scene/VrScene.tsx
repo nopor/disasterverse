@@ -11,7 +11,7 @@ import {
 } from "@babylonjs/core";
 import { BasicScene } from "../Scene/BasicScene";
 import { WaterMaterial } from "@babylonjs/materials";
-import { MAX_WATER_LEVEL } from "../util/maxValues";
+import { MAX_WATER_LEVEL, WATER_RISING_SPEED } from "../util/values";
 
 let nextUpdate = 0;
 
@@ -116,14 +116,14 @@ export const VrScene: FC<{
     if (flood) {
       var deltaTimeInMillis = scene.getEngine().getDeltaTime();
 
-      const rpm = 1;
+      const rpm = WATER_RISING_SPEED;
       // if (buildingLoaded && flood.position.y < MAX_WATER_LEVEL) {
       if (flood.position.y < MAX_WATER_LEVEL) {
         flood.position.y += (rpm / 60) * (deltaTimeInMillis / 1000);
         nextUpdate -= deltaTimeInMillis;
         if(nextUpdate <= 0) {
           nextUpdate = 2000;
-          setWaterLevel(flood.position.y / MAX_WATER_LEVEL * 100);
+          setWaterLevel(Math.min(flood.position.y / MAX_WATER_LEVEL * 100, 100));
         }
       }
       // box.rotation.z += (rpm / 60) * Math.PI * 2 * (deltaTimeInMillis / 1000);
