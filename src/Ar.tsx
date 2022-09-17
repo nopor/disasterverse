@@ -1,3 +1,4 @@
+import React from "react";
 import {
   FreeCamera,
   Vector3,
@@ -8,11 +9,9 @@ import {
   AbstractMesh,
 } from "@babylonjs/core";
 import "./App.css";
-import { BasicScene } from "./Scene/BasicScene";
 import { Mesh } from "@babylonjs/core/Meshes/mesh";
 import {} from "@babylonjs/loaders";
 import { ARScene } from "./Scene/ArScene";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 let box: Mesh;
 
@@ -85,18 +84,9 @@ const onRender = (scene: Scene) => {
 };
 
 const App = () => (
-  <Router>
-    <Routes>
-      <Route
-        element={<BasicScene onSceneReady={onSceneReady} onRender={onRender} />}
-        path="/"
-      ></Route>
-      <Route
-        path="/ar"
-        element={<ARScene onSceneReady={onSceneReady} onRender={onRender} />}
-      ></Route>
-    </Routes>
-  </Router>
+  <div>
+    <ARScene onSceneReady={onSceneReady} onRender={onRender} />
+  </div>
 );
 
 export default App;
