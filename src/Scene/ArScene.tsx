@@ -5,7 +5,6 @@ import {
   EngineOptions,
   Scene,
   SceneOptions,
-  UniversalCamera,
   Vector3,
   WebXRCamera,
   WebXRSessionManager,
@@ -66,6 +65,7 @@ export const ARScene: FC<ARSceneProps> = ({
       );
       const scene = new Scene(engine, sceneOptions);
       const sessionManager = new WebXRSessionManager(scene);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const camera = new WebXRCamera("camera", scene, sessionManager);
 
       const xr = await scene.createDefaultXRExperienceAsync({
