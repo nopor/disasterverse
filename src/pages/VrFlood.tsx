@@ -74,10 +74,10 @@ export const VrFlood: FC = () => {
     skybox.material = skyboxMaterial;
     skybox.checkCollisions = true;
 
-    const defaultPlane = MeshBuilder.CreateGround('ground', { height: 300, width: 300 }, scene);
-    defaultPlane.checkCollisions = true;
-    defaultPlane.position.y = 5;
-    defaultPlane.rotation.x = Tools.ToRadians(0.5);
+    // const defaultPlane = MeshBuilder.CreateGround('ground', { height: 300, width: 300 }, scene);
+    // defaultPlane.checkCollisions = true;
+    // defaultPlane.position.y = 5;
+    // defaultPlane.rotation.x = Tools.ToRadians(0.5);
 
     const waterMat = new WaterMaterial("water", scene);
     waterMat.bumpTexture = new Texture(`${process.env.PUBLIC_URL}/textures/waterbump.png`, scene);
@@ -93,7 +93,6 @@ export const VrFlood: FC = () => {
     waterMat.bumpHeight = 0.1;
     waterMat.waveLength = 0.1;
     waterMat.addToRenderList(skybox);
-    waterMat.addToRenderList(defaultPlane);
     for(let importedBuilding of importedBuildings) {
       waterMat.addToRenderList(importedBuilding);
     }
