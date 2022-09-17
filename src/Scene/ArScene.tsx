@@ -4,13 +4,15 @@ import {
   EngineOptions,
   Scene,
   SceneOptions,
-  UniversalCamera,
   Vector3,
+  WebXRCamera,
+  WebXRSessionManager,
 } from "@babylonjs/core";
 import { WaterLevel } from "../components/WaterLevel";
 import { Counter } from "../components/Counter";
 import { EscapeArrow } from "../components/EscapeArrow";
 import { Meter } from "../components/Meter";
+import { GPS } from "../components/GPS";
 
 const instructions = ["Almost there!", "Hurry up!", "Follow the arrow to exit"];
 
@@ -59,11 +61,9 @@ export const ARScene: FC<ARSceneProps> = ({
       adaptToDeviceRatio
     );
     const scene = new Scene(engine, sceneOptions);
-    const camera = new UniversalCamera(
-      "UniversalCamera",
-      new Vector3(0, 1, 0),
-      scene
-    );
+
+    const sessionManager = new WebXRSessionManager(scene);
+    const camera = new WebXRCamera("camera", scene, sessionManager);
     camera.setTarget(Vector3.Zero());
     // camera.applyGravity = true;
     camera.ellipsoid = new Vector3(1, 1.5, 1);
@@ -149,7 +149,7 @@ export const ARScene: FC<ARSceneProps> = ({
         id="hud-bottom"
         style={{
           position: "absolute",
-          top: "60px",
+          top: "45px",
           left: "10px",
           alignItems: "center",
         }}
@@ -200,19 +200,7 @@ export const ARScene: FC<ARSceneProps> = ({
           alignItems: "center",
         }}
       >
-        <p>
-          <span style={{ fontSize: "1.2em" }}></span>
-          <span
-            className="text-glow"
-            style={{
-              color: "white",
-              fontSize: "0.8em",
-              paddingLeft: "5px",
-            }}
-          >
-            📍 lat: 47.37691, lon: 8.54173
-          </span>
-        </p>
+        <GPS />
       </div>
       <div
         id="hud-right"
@@ -221,9 +209,37 @@ export const ARScene: FC<ARSceneProps> = ({
           position: "absolute",
           bottom: "0px",
           right: "10px",
+          alignItems: "center",
         }}
       >
         <WaterLevel percentage={55} />
+      </div>
+      <div
+        id="hud-bottom-center"
+        style={{
+          position: "absolute",
+          bottom: "10px",
+          right: 0,
+          left: "calc(100vw / 2 - 50px)",
+          margin: "auto",
+          alignItems: "center",
+        }}
+      >
+        <button
+          onClick={() => alert("Alert help?")}
+          style={{
+            border: "none",
+            backgroundColor: "rgba(255, 255, 255, 0.5)",
+            borderRadius: "10px",
+            color: "white",
+            fontSize: "1.2em",
+            padding: "0.5em",
+            fontFamily: "Orbitron",
+            width: "100px",
+          }}
+        >
+          🚨 Help
+        </button>
       </div>
       <div
         id="hud-left"
@@ -240,12 +256,13 @@ export const ARScene: FC<ARSceneProps> = ({
           id="hud-top-bottom"
           style={{
             position: "absolute",
-            bottom: "15px",
-            left: "15px",
+            bottom: "150px",
+            left: "calc(50vw - 30px)",
             right: "0",
             textAlign: "center",
             height: "10px",
             rotate: "90deg",
+            width: "70px",
           }}
         >
           <EscapeArrow />
