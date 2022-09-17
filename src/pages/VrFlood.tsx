@@ -56,7 +56,7 @@ export const VrFlood: FC = () => {
           importedMesh.physicsImpostor = new PhysicsImpostor(meshes[0], PhysicsImpostor.BoxImpostor, { mass: 0, friction: 0.1, restitution: 0.8 }, scene);
           importedMesh.checkCollisions = true;
           importedMesh.rotation.x = Tools.ToRadians(0.5);
-          // importedBuilding.position.y = -6;
+          importedMesh.position.y = 1;
           importedBuildings.push(importedMesh);
         }
         buildingLoaded = true;
