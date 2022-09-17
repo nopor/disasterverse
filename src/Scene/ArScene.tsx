@@ -65,28 +65,8 @@ export const ARScene: FC<ARSceneProps> = ({
         adaptToDeviceRatio
       );
       const scene = new Scene(engine, sceneOptions);
-
-      const hackZurichStart = new Vector3(
-        42.58272892940811,
-        31.93251265525484,
-        -133.5501336362101
-      );
-      const cameraStartPoint = hackZurichStart;
-      const camera = new UniversalCamera(
-        "UniversalCamera",
-        cameraStartPoint,
-        scene
-      );
-      camera.setTarget(Vector3.Zero());
-      // camera.applyGravity = true;
-      // camera.ellipsoid = new Vector3(1, 1.5, 1);
-      // camera.checkCollisions = true;
-      camera.attachControl(canvas, true);
-      camera.speed = 0.5;
-      camera.keysUp.push(87);
-      camera.keysDown.push(83);
-      camera.keysRight.push(68);
-      camera.keysLeft.push(65);
+      const sessionManager = new WebXRSessionManager(scene);
+      const camera = new WebXRCamera("camera", scene, sessionManager);
 
       const xr = await scene.createDefaultXRExperienceAsync({
         uiOptions: {
