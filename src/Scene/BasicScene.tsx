@@ -18,7 +18,7 @@ export const BasicScene: FC<BasicSceneProps> =
 
     // set up basic engine and scene
     useEffect(() => {
-      (async function() {
+      (async function () {
 
         const { current: canvas } = reactCanvas;
 
@@ -27,8 +27,9 @@ export const BasicScene: FC<BasicSceneProps> =
         const engine = new Engine(canvas, antialias, engineOptions, adaptToDeviceRatio);
         const scene = new Scene(engine, sceneOptions);
         // @ts-ignore
-        
+
         const camera = new UniversalCamera("UniversalCamera", new Vector3(120, 20, 100), scene);
+        // const camera = new VRDeviceOrientationFreeCamera("UniversalCamera", new Vector3(120, 20, 100), scene);
         camera.setTarget(Vector3.Zero());
         camera.applyGravity = true;
         camera.ellipsoid = new Vector3(1, 1.5, 1);
@@ -63,6 +64,10 @@ export const BasicScene: FC<BasicSceneProps> =
           const vrCamera = new DeviceOrientationCamera("DevOr_camera", new Vector3(120, 20, 100), scene);
           vrCamera.setTarget(Vector3.Zero());
           vrCamera.attachControl(canvas, true);
+          vrCamera.ellipsoid = new Vector3(1, 1.5, 1);
+          vrCamera.applyGravity = true;
+          vrCamera.checkCollisions = true;
+          // vrCamera.orthoRight
           scene.activeCamera = vrCamera;
         });
 
