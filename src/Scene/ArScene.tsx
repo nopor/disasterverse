@@ -1,9 +1,11 @@
 import { FC, useEffect, useRef, useState } from "react";
 import {
+  DeviceOrientationCamera,
   Engine,
   EngineOptions,
   Scene,
   SceneOptions,
+  UniversalCamera,
   Vector3,
   WebXRCamera,
   WebXRSessionManager,
@@ -51,58 +53,92 @@ export const ARScene: FC<ARSceneProps> = ({
 
   // set up basic engine and scene
   useEffect(() => {
-    const { current: canvas } = reactCanvas;
+    (async function () {
+      const { current: canvas } = reactCanvas;
 
-    if (!canvas) return;
+      if (!canvas) return;
 
-    const engine = new Engine(
-      canvas,
-      antialias,
-      engineOptions,
-      adaptToDeviceRatio
-    );
-    const scene = new Scene(engine, sceneOptions);
+      const engine = new Engine(
+        canvas,
+        antialias,
+        engineOptions,
+        adaptToDeviceRatio
+      );
+      const scene = new Scene(engine, sceneOptions);
 
-    const sessionManager = new WebXRSessionManager(scene);
-    const camera = new WebXRCamera("camera", scene, sessionManager);
-    camera.setTarget(Vector3.Zero());
-    // camera.applyGravity = true;
-    camera.ellipsoid = new Vector3(1, 1.5, 1);
-    camera.checkCollisions = true;
-    camera.attachControl(canvas, true);
-    camera.speed = 0.5;
-    camera.keysUp.push(87);
-    camera.keysDown.push(83);
-    camera.keysRight.push(68);
-    camera.keysLeft.push(65);
-    if (typeof onSceneReady === "function") {
-      if (scene.isReady()) {
-        onSceneReady(scene);
-      } else {
-        scene.onReadyObservable.addOnce((scene) => onSceneReady(scene));
+      const hackZurichStart = new Vector3(
+        42.58272892940811,
+        31.93251265525484,
+        -133.5501336362101
+      );
+      const cameraStartPoint = hackZurichStart;
+      const camera = new UniversalCamera(
+        "UniversalCamera",
+        cameraStartPoint,
+        scene
+      );
+      camera.setTarget(Vector3.Zero());
+      // camera.applyGravity = true;
+      // camera.ellipsoid = new Vector3(1, 1.5, 1);
+      // camera.checkCollisions = true;
+      camera.attachControl(canvas, true);
+      camera.speed = 0.5;
+      camera.keysUp.push(87);
+      camera.keysDown.push(83);
+      camera.keysRight.push(68);
+      camera.keysLeft.push(65);
+
+      const xr = await scene.createDefaultXRExperienceAsync({
+        uiOptions: {
+          sessionMode: "immersive-ar",
+        },
+        optionalFeatures: true,
+      });
+      xr.input.onControllerAddedObservable.add(() => {
+        xr.teleportation.teleportationEnabled = true;
+        const arCamera = new DeviceOrientationCamera(
+          "DevOr_camera",
+          new Vector3(120, 20, 100),
+          scene
+        );
+        arCamera.setTarget(Vector3.Zero());
+        arCamera.attachControl(canvas, true);
+        arCamera.ellipsoid = new Vector3(1, 1.5, 1);
+        arCamera.applyGravity = true;
+        arCamera.checkCollisions = true;
+        // vrCamera.orthoRight
+        scene.activeCamera = arCamera;
+      });
+
+      if (typeof onSceneReady === "function") {
+        if (scene.isReady()) {
+          onSceneReady(scene);
+        } else {
+          scene.onReadyObservable.addOnce((scene) => onSceneReady(scene));
+        }
       }
-    }
 
-    engine.runRenderLoop(() => {
-      if (typeof onRender === "function") onRender(scene);
-      scene.render();
-    });
+      engine.runRenderLoop(() => {
+        if (typeof onRender === "function") onRender(scene);
+        scene.render();
+      });
 
-    const resize = () => {
-      scene.getEngine().resize();
-    };
-
-    if (window) {
-      window.addEventListener("resize", resize);
-    }
-
-    return () => {
-      scene.getEngine().dispose();
+      const resize = () => {
+        scene.getEngine().resize();
+      };
 
       if (window) {
-        window.removeEventListener("resize", resize);
+        window.addEventListener("resize", resize);
       }
-    };
+
+      return () => {
+        scene.getEngine().dispose();
+
+        if (window) {
+          window.removeEventListener("resize", resize);
+        }
+      };
+    })();
   }, [
     antialias,
     engineOptions,
