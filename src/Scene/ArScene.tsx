@@ -8,7 +8,7 @@ import {
   WebXRCamera,
   WebXRSessionManager,
 } from "@babylonjs/core";
-import { WaterLevel } from "../components/WaterLevel";
+import { WaterLevel, WaterLevelRef } from "../components/WaterLevel";
 import { Counter } from "../components/Counter";
 import { EscapeArrow } from "../components/EscapeArrow";
 import { Meter } from "../components/Meter";
@@ -35,8 +35,9 @@ export const ARScene: FC<ARSceneProps> = ({
   ...rest
 }) => {
   const reactCanvas = useRef(null);
+  const waterLevelRef = useRef<WaterLevelRef>(null);
 
-  const [secondsLeft, setSecondsLeft] = useState(60);
+  const [secondsLeft, setSecondsLeft] = useState(2220);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -113,12 +114,34 @@ export const ARScene: FC<ARSceneProps> = ({
 
   return (
     <div style={{ height: "100vh", width: "100%", overflow: "hidden" }}>
+      <video
+        id="background-video"
+        autoPlay
+        loop
+        muted
+        style={{
+          width: "100vw",
+          height: "100vh",
+          objectFit: "cover",
+          position: "fixed",
+          left: "0",
+          right: "0",
+          top: "0",
+          bottom: "0",
+          zIndex: "-1",
+        }}
+      >
+        <source
+          src={`${process.env.PUBLIC_URL}/assets/ar.mp4`}
+          type="video/mp4"
+        />
+      </video>
       <canvas ref={reactCanvas} {...rest} />;
       <div
         id="hud-top"
         style={{
           position: "absolute",
-          top: "0px",
+          top: "-10px",
           left: "10px",
           alignItems: "center",
         }}
@@ -129,7 +152,7 @@ export const ARScene: FC<ARSceneProps> = ({
         id="hud-top-center"
         style={{
           position: "absolute",
-          top: "90px",
+          top: "80px",
           left: "10px",
           margin: "auto",
         }}
@@ -140,16 +163,17 @@ export const ARScene: FC<ARSceneProps> = ({
             color: "rgb(124, 251, 255)",
             fontSize: "1em",
             paddingLeft: "10px",
+            textAlign: "center",
           }}
         >
-          {instructions[secondsLeft < 10 ? 0 : secondsLeft < 30 ? 1 : 2]}
+          {instructions[secondsLeft < 10 ? 0 : secondsLeft < 1000 ? 1 : 2]}
         </p>
       </div>
       <div
         id="hud-bottom"
         style={{
           position: "absolute",
-          top: "45px",
+          top: "40px",
           left: "10px",
           alignItems: "center",
         }}
@@ -157,9 +181,9 @@ export const ARScene: FC<ARSceneProps> = ({
         <p
           className="text-glow"
           style={{
-            fontSize: "1em",
+            fontSize: "0.7em",
             paddingLeft: "10px",
-            color: "gray",
+            color: "lightgray",
           }}
         >
           👤 12 Users online
@@ -169,7 +193,7 @@ export const ARScene: FC<ARSceneProps> = ({
         id="hud-right"
         style={{
           position: "absolute",
-          top: "10px",
+          top: "-5px",
           right: "10px",
           display: "inline-flex",
           alignItems: "center",
@@ -194,7 +218,7 @@ export const ARScene: FC<ARSceneProps> = ({
         id="hud-right"
         style={{
           position: "absolute",
-          top: "40px",
+          top: "30px",
           right: "10px",
           display: "inline-flex",
           alignItems: "center",
@@ -212,7 +236,7 @@ export const ARScene: FC<ARSceneProps> = ({
           alignItems: "center",
         }}
       >
-        <WaterLevel />
+        <WaterLevel ref={waterLevelRef} />
       </div>
       <div
         id="hud-bottom-center"
@@ -249,7 +273,7 @@ export const ARScene: FC<ARSceneProps> = ({
           left: "20px",
         }}
       >
-        <Meter percentage={((60 - secondsLeft) / 100 / 60) * 100} />
+        <Meter percentage={30 / 100} />
       </div>
       <div style={{ overflow: "hidden" }}>
         <div

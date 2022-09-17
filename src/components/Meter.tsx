@@ -1,7 +1,6 @@
 import { FC } from "react";
 
 export const Meter: FC<{ percentage: number }> = ({ percentage }) => {
-  console.log(percentage);
   return (
     <>
       <div
@@ -16,8 +15,11 @@ export const Meter: FC<{ percentage: number }> = ({ percentage }) => {
           style={{
             width: "100%",
             height: `${percentage * 100}%`,
-            backgroundColor: "crimson",
+            background:
+              "linear-gradient(9deg, rgba(32,0,36,1) 0%, rgba(121,9,9,1) 48%, rgba(255,0,131,0.7917760854341737) 100%)",
             borderRadius: "20px",
+            borderTopLeftRadius: 0,
+            borderTopRightRadius: 0,
             position: "absolute",
             bottom: "0px",
           }}

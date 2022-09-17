@@ -1,6 +1,8 @@
 import { FC } from "react";
 
 export const Counter: FC<{ secondsLeft: number }> = ({ secondsLeft }) => {
+  const minutesLeft = Math.floor(secondsLeft / 60);
+  const remainder = secondsLeft - minutesLeft * 60;
   return (
     <p
       style={{
@@ -12,7 +14,8 @@ export const Counter: FC<{ secondsLeft: number }> = ({ secondsLeft }) => {
         width: "150px",
       }}
     >
-      🕦 {secondsLeft} min
+      🕦 {minutesLeft > 0 && minutesLeft}:{secondsLeft < 10 && "0"}
+      {remainder}
     </p>
   );
 };
