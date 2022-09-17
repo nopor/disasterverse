@@ -11,6 +11,7 @@ import {
   Color3,
   StandardMaterial,
   Tools,
+  Material,
 } from "@babylonjs/core";
 import { BasicScene } from "../Scene/BasicScene";
 import { WaterMaterial } from "@babylonjs/materials";
@@ -74,9 +75,12 @@ export const VrFlood: FC = () => {
     skybox.material = skyboxMaterial;
     skybox.checkCollisions = true;
 
-    // const defaultPlane = MeshBuilder.CreateGround('ground', { height: 300, width: 300 }, scene);
-    // defaultPlane.checkCollisions = true;
-    // defaultPlane.position.y = 5;
+    const defaultPlane = MeshBuilder.CreateGround('ground', { height: 750, width: 750 }, scene);
+    defaultPlane.checkCollisions = true;
+    defaultPlane.position.y = 4;
+    const invisilbeMat = new Material('inv', scene);
+    invisilbeMat.alpha = 1;
+    defaultPlane.material = invisilbeMat;
     // defaultPlane.rotation.x = Tools.ToRadians(0.5);
 
     const waterMat = new WaterMaterial("water", scene);
