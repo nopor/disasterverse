@@ -1,6 +1,11 @@
-import { FC, useEffect, useRef } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import { Engine, EngineOptions, Scene, SceneOptions } from "@babylonjs/core";
 import { WaterLevel } from "../components/WaterLevel";
+import { Counter } from "../components/Counter";
+import { EscapeArrow } from "../components/EscapeArrow";
+import { Meter } from "../components/Meter";
+
+const instructions = ["Go down!", "Hurry up!", "Follow the arrow to exit"];
 
 type ARSceneProps = {
   antialias?: boolean;
@@ -10,6 +15,7 @@ type ARSceneProps = {
   onRender?: (scene: Scene) => void;
   onSceneReady?: (scene: Scene) => void;
 };
+
 export const ARScene: FC<ARSceneProps> = ({
   antialias = true,
   engineOptions,
@@ -20,6 +26,18 @@ export const ARScene: FC<ARSceneProps> = ({
   ...rest
 }) => {
   const reactCanvas = useRef(null);
+
+  const [secondsLeft, setSecondsLeft] = useState(60);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      console.log(secondsLeft);
+      if (secondsLeft > 0) {
+        setSecondsLeft(secondsLeft - 1);
+      }
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [secondsLeft]);
 
   // set up basic engine and scene
   useEffect(() => {
@@ -72,19 +90,52 @@ export const ARScene: FC<ARSceneProps> = ({
   ]);
 
   return (
-    <div style={{ height: "100vh", overflow: "hidden" }}>
+    <div style={{ height: "100vh", width: "100%", overflow: "hidden" }}>
       <canvas ref={reactCanvas} {...rest} />;
       <div
         id="hud-top"
         style={{
           position: "absolute",
-          top: "10px",
+          top: "0px",
           left: "10px",
-          display: "inline-flex",
           alignItems: "center",
         }}
       >
-        <p style={{ color: "white", fontSize: "1.2em", paddingLeft: "10px" }}>
+        <Counter secondsLeft={secondsLeft} />
+      </div>
+      <div
+        id="hud-top-center"
+        style={{
+          position: "absolute",
+          top: "90px",
+          left: "10px",
+          margin: "auto",
+        }}
+      >
+        <p
+          className="text-glow pulse"
+          style={{
+            color: "rgb(124, 251, 255)",
+            fontSize: "1em",
+            paddingLeft: "10px",
+          }}
+        >
+          {instructions[secondsLeft < 10 ? 0 : secondsLeft < 30 ? 1 : 2]}
+        </p>
+      </div>
+      <div
+        id="hud-bottom"
+        style={{
+          position: "absolute",
+          top: "60px",
+          left: "10px",
+          alignItems: "center",
+        }}
+      >
+        <p
+          className="text-glow"
+          style={{ color: "white", fontSize: "1.2em", paddingLeft: "10px" }}
+        >
           👤 12 Users online
         </p>
       </div>
@@ -101,10 +152,11 @@ export const ARScene: FC<ARSceneProps> = ({
         <p>
           <span style={{ fontSize: "1.2em" }}>🌡️</span>
           <span
+            className="text-glow"
             style={{
               color: "white",
               fontSize: "1.5em",
-              fontWeight: "bold",
+
               paddingLeft: "5px",
             }}
           >
@@ -118,11 +170,37 @@ export const ARScene: FC<ARSceneProps> = ({
         style={{
           height: "200px",
           position: "absolute",
-          bottom: "10px",
+          bottom: "0px",
           right: "10px",
         }}
       >
         <WaterLevel percentage={55} />
+      </div>
+      <div
+        id="hud-left"
+        style={{
+          position: "absolute",
+          bottom: "50px",
+          left: "20px",
+        }}
+      >
+        <Meter percentage={((60 - secondsLeft) / 100 / 60) * 100} />
+      </div>
+      <div style={{ overflow: "hidden" }}>
+        <div
+          id="hud-top-bottom"
+          style={{
+            position: "absolute",
+            bottom: "15px",
+            left: "15px",
+            right: "0",
+            textAlign: "center",
+            height: "10px",
+            rotate: "90deg",
+          }}
+        >
+          <EscapeArrow />
+        </div>
       </div>
     </div>
   );

@@ -17,13 +17,12 @@ code {
 
 /* Water level */
 
-
-.liquid{
+.liquid {
   overflow:hidden;
   position:relative;
   width:100px;
   height:100px;
-  background-color:rgba(182, 255, 255, 0.8);
+  background-color:rgba(108, 255, 255, 0.8);
   border-radius:50%;
   box-shadow: inset 0 0 50px #0E0E0E;
 }
@@ -46,4 +45,84 @@ transform:rotate(0deg);}
 100%{
   transform:rotate(360deg)
   }
+}
+
+.text-glow {
+  text-shadow:
+  0 0 7px #fff,
+  0 0 10px #fff,
+  0 0 21px #fff,
+  0 0 42px rgb(0, 255, 255),
+  0 0 82px rgb(0, 255, 255),
+  0 0 92px rgb(0, 255, 255),
+  0 0 102px rgb(0, 255, 255),
+  0 0 151px rgb(0, 255, 255),
+}
+
+/** Arrow */
+
+#arrowAnim {
+  width: auto;
+  height: auto;
+  display: flex;
+}
+
+.arrow {
+  width: 5vw;
+  height: 5vw;
+  border: 2.5vw solid;
+  border-color: rgb(124, 251, 255) transparent transparent rgb(124, 251, 255);
+  transform: rotate(-45deg);
+}
+
+
+.arrowSliding {
+  position: absolute;
+  -webkit-animation: slide 4s linear infinite; 
+          animation: slide 4s linear infinite;
+}
+
+.delay1 {
+  -webkit-animation-delay: 1s; 
+    animation-delay: 1s;
+    
+}
+.delay2 {
+  -webkit-animation-delay: 2s; 
+    animation-delay: 2s;
+}
+.delay3 {
+  -webkit-animation-delay: 3s; 
+    animation-delay: 3s;
+}
+
+@-webkit-keyframes slide {
+    0% { opacity:0; transform: translateX(15vw); }	
+   20% { opacity:1; transform: translateX(9vw); }	
+   80% { opacity:1; transform: translateX(-9vw); }	
+  100% { opacity:0; transform: translateX(-15vw); }	
+}
+@keyframes slide {
+    0% { opacity:0; transform: translateX(15vw); }	
+   20% { opacity:1; transform: translateX(9vw); }	
+   80% { opacity:1; transform: translateX(-9vw); }	
+  100% { opacity:0; transform: translateX(-15vw); }	
+}
+
+.pulse {
+	animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+	0% {
+		opacity: 0;
+	}
+
+	70% {
+	opacity: 0.5;
+	}
+
+	100% {
+		opacity: 1;
+	}
 }

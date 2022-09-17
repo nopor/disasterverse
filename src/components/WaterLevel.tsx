@@ -13,6 +13,7 @@ export const WaterLevel: FC<{ percentage: number }> = ({ percentage }) => {
       <div className="liquid"></div>
 
       <p
+        className="text-glow"
         style={{
           color: "white",
           textAlign: "center",
