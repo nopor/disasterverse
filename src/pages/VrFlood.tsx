@@ -47,23 +47,6 @@ export const VrFlood: FC = () => {
     //     importedBox.position.y = 1;
     //   }
     // );
-    SceneLoader.ImportMesh(
-      "",
-      `${process.env.PUBLIC_URL}/assets/vorwerk_low.glb`,
-      "",
-      scene,
-      (meshes) => {
-        for (let importedMesh of meshes) {
-          importedMesh.physicsImpostor = new PhysicsImpostor(meshes[0], PhysicsImpostor.BoxImpostor, { mass: 0, friction: 0.1, restitution: 0.8 }, scene);
-          importedMesh.checkCollisions = true;
-          importedMesh.rotation.x = Tools.ToRadians(0.5);
-          importedMesh.position.y = 1;
-          importedBuildings.push(importedMesh);
-        }
-        buildingLoaded = true;
-      }
-    );
-
     const skybox = MeshBuilder.CreateSphere("sky", { diameter: 600 }, scene);
     const skyboxMaterial = new StandardMaterial("sky", scene);
     skyboxMaterial.backFaceCulling = false;
@@ -97,10 +80,24 @@ export const VrFlood: FC = () => {
     waterMat.bumpHeight = 0.1;
     waterMat.waveLength = 0.1;
     waterMat.addToRenderList(skybox);
-    for(let importedBuilding of importedBuildings) {
-      waterMat.addToRenderList(importedBuilding);
-    }
 
+    SceneLoader.ImportMesh(
+      "",
+      `${process.env.PUBLIC_URL}/assets/vorwerk_low.glb`,
+      "",
+      scene,
+      (meshes) => {
+        for (let importedMesh of meshes) {
+          importedMesh.physicsImpostor = new PhysicsImpostor(meshes[0], PhysicsImpostor.BoxImpostor, { mass: 0, friction: 0.1, restitution: 0.8 }, scene);
+          importedMesh.checkCollisions = true;
+          importedMesh.rotation.x = Tools.ToRadians(0.5);
+          importedMesh.position.y = 1;
+          importedBuildings.push(importedMesh);
+          waterMat.addToRenderList(importedMesh);
+        }
+        buildingLoaded = true;
+      }
+    );
 
     flood = MeshBuilder.CreateGround('flood', { width: 600, height: 600, }, scene);
     // flood.position = new Vector3(0,10,0);
