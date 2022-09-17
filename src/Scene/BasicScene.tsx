@@ -1,5 +1,5 @@
 import { FC, useEffect, useRef } from "react";
-import { Color3, DeviceOrientationCamera, Engine, EngineOptions, HemisphericLight, Scene, SceneOptions, UniversalCamera, Vector3, WebXRDefaultExperience, WebXREnterExitUIButton, WebXRSessionManager } from "@babylonjs/core";
+import { Color3, DeviceOrientationCamera, Engine, EngineOptions, HemisphericLight, Scene, SceneOptions, UniversalCamera, Vector3 } from "@babylonjs/core";
 
 // @ts-ignore
 // import * as Ammo from 'ammo.js';
