@@ -26,7 +26,7 @@ export const Meter: FC<{ percentage: number }> = ({ percentage }) => {
         />
       </div>
       <p style={{ color: "white", width: "90px", position: "absolute" }}>
-        Risk level
+        Damage
       </p>
     </>
   );
